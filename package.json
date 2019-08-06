@@ -1,17 +1,17 @@
 {
   "name": "@epsor/apollo-client-wrapper",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "author": "Epsor",
   "description": "GraphQL API Client for Epsor",
   "main": "dist/index.js",
   "scripts": {
-    "commit": "git-cz",
-    "lint": "eslint src --cache --max-warnings=0 --cache-location .eslintcache",
-    "build": "babel src -d dist",
     "prepare": "npm run build",
-    "start": "babel src -d dist --ignore 'src/**/*.test.js' --watch",
+    "test": "echo no tests",
+    "start": "babel src -d dist --watch --copy-files --verbose",
     "clean": "rm -rf dist",
-    "test": "echo no tests"
+    "build": "babel src -d dist --ignore 'src/**/*.test.js'",
+    "commit": "git-cz",
+    "lint": "eslint src --cache --max-warnings=0 --cache-location .eslintcache"
   },
   "dependencies": {
     "@babel/cli": "^7.5.0",
