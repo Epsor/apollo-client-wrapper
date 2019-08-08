@@ -40,7 +40,7 @@ jobs:
       - checkout
       - restore_cache:
           key: npm-{{ checksum "package-lock.json" }}
-      - run: npm install --ignore-scripts
+      - run: npm install --ignore-scripts --production
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
