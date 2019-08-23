@@ -101,20 +101,20 @@ export default ({ defaultState, resolvers, defaultOptions }) => {
     resolvers: {
       Mutation: {},
     },
-    defaultOptions: merge(defaultOptions || {}, {
-      mutate: {
-        errorPolicy: 'all',
-        fetchPolicy: 'cache-first',
+    defaultOptions: merge(
+      {
+        mutate: {
+          errorPolicy: 'all',
+        },
+        query: {
+          errorPolicy: 'all',
+        },
+        watchQuery: {
+          errorPolicy: 'all',
+        },
       },
-      query: {
-        errorPolicy: 'all',
-        fetchPolicy: 'cache-first',
-      },
-      watchQuery: {
-        errorPolicy: 'all',
-        fetchPolicy: 'cache-first',
-      },
-    }),
+      defaultOptions || {},
+    ),
     cache,
     connectToDevTools: process.env.NODE_ENV === 'development',
   });
