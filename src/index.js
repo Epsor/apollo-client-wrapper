@@ -10,6 +10,7 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import fetch from 'unfetch';
+import merge from 'lodash/merge';
 
 import { LOCALSTORAGE_JWT_KEY } from './types/authentication';
 
@@ -18,7 +19,7 @@ export const createUuid = uuidv4;
 /**
  * Initialize Apollo client
  */
-export default ({ defaultState, resolvers }) => {
+export default ({ defaultState, resolvers, defaultOptions }) => {
   /**
    * Define cache system.
    */
@@ -100,6 +101,20 @@ export default ({ defaultState, resolvers }) => {
     resolvers: {
       Mutation: {},
     },
+    defaultOptions: merge(defaultOptions || {}, {
+      mutate: {
+        errorPolicy: 'all',
+        fetchPolicy: 'cache-first',
+      },
+      query: {
+        errorPolicy: 'all',
+        fetchPolicy: 'cache-first',
+      },
+      watchQuery: {
+        errorPolicy: 'all',
+        fetchPolicy: 'cache-first',
+      },
+    }),
     cache,
     connectToDevTools: process.env.NODE_ENV === 'development',
   });
