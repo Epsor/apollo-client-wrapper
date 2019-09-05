@@ -9,10 +9,9 @@ import { ApolloLink, split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+import Cookies from 'js-cookie';
 import fetch from 'unfetch';
 import merge from 'lodash/merge';
-
-import { LOCALSTORAGE_JWT_KEY } from './types/authentication';
 
 export const createUuid = uuidv4;
 
@@ -29,15 +28,12 @@ export default ({ defaultState, resolvers, defaultOptions }) => {
   });
 
   /**
-   * Set JWT from localstorage in every header request.
+   * Set token from cookies in every header request.
    */
-  const setAuthorizationLink = setContext(() => {
-    if (!localStorage) {
-      return null;
-    }
-    const jwt = localStorage.getItem(LOCALSTORAGE_JWT_KEY);
+  const setAuthorizationLink = setContext((_, { headers }) => {
+    const token = Cookies.get('access_token');
     return {
-      headers: { authorization: jwt },
+      headers: { ...headers, Authorization: token ? `Bearer ${token}` : '' },
     };
   });
 
