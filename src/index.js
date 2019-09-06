@@ -19,8 +19,12 @@ export const createUuid = uuidv4;
 
 /**
  * Initialize Apollo client
+ * @param {string} entryPoint GraphQL server entry point
  */
-export default ({ defaultState, resolvers, defaultOptions }) => {
+export default (
+  { defaultState, resolvers, defaultOptions },
+  entryPoint = process.env.REACT_APP_GRAPHQL_API_FQDN,
+) => {
   /**
    * Define cache system.
    */
@@ -47,9 +51,7 @@ export default ({ defaultState, resolvers, defaultOptions }) => {
 
   const websocketLink = new WebSocketLink(
     new SubscriptionClient(
-      `ws${process.env.NODE_ENV === 'development' ? '' : 's'}://${
-        process.env.REACT_APP_GRAPHQL_API_FQDN
-      }/graphql`,
+      `ws${process.env.NODE_ENV === 'development' ? '' : 's'}://${entryPoint}/graphql`,
       {
         reconnect: true,
       },
@@ -57,9 +59,7 @@ export default ({ defaultState, resolvers, defaultOptions }) => {
   );
 
   const httpLink = new HttpLink({
-    uri: `http${process.env.NODE_ENV === 'development' ? '' : 's'}://${
-      process.env.REACT_APP_GRAPHQL_API_FQDN
-    }`,
+    uri: `http${process.env.NODE_ENV === 'development' ? '' : 's'}://${entryPoint}`,
     credentials: 'include',
     fetch,
   });

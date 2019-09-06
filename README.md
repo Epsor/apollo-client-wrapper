@@ -5,4 +5,6 @@
 
 ## Requirements
 
-Both `ENVIRONMENT` and `GRAPHQL_API_FQDN` must be defined as environment variables.
+`ENVIRONMENT` must be defined as environment variable.
+A `entryPoint` argument must be provided to the constructor in order to set the entry point of the GraphQL server.
+If `entryPoint` is not defined, the `GRAPHQL_API_FQDN` environment variable will be set as the default entry point.
