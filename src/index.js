@@ -13,6 +13,8 @@ import Cookies from 'js-cookie';
 import fetch from 'unfetch';
 import merge from 'lodash/merge';
 
+import { AUTHENTIFICATION_TOKEN_COOKIE } from './types';
+
 export const createUuid = uuidv4;
 
 /**
@@ -35,7 +37,7 @@ export default (
    * Set token from cookies in every header request.
    */
   const setAuthorizationLink = setContext((_, { headers }) => {
-    const token = Cookies.get('access_token');
+    const token = Cookies.get(AUTHENTIFICATION_TOKEN_COOKIE);
     return {
       headers: { ...headers, Authorization: token ? `Bearer ${token}` : '' },
     };
