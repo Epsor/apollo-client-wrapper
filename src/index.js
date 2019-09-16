@@ -1,12 +1,12 @@
 import uuidv4 from 'uuid/v4';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import { onError } from 'apollo-link-error';
 import { withClientState } from 'apollo-link-state';
 import { ApolloLink, split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
+import { createUploadLink } from 'apollo-upload-client';
 import { getMainDefinition } from 'apollo-utilities';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import Cookies from 'js-cookie';
@@ -58,7 +58,7 @@ export default (
     ),
   );
 
-  const httpLink = new HttpLink({
+  const httpLink = createUploadLink({
     uri: `http${process.env.NODE_ENV === 'development' ? '' : 's'}://${entryPoint}`,
     credentials: 'include',
     fetch,
