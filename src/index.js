@@ -3,7 +3,6 @@ import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import { onError } from 'apollo-link-error';
-import { withClientState } from 'apollo-link-state';
 import { ApolloLink, split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { createUploadLink } from 'apollo-upload-client';
@@ -22,7 +21,7 @@ export const createUuid = uuidv4;
  * @param {string} entryPoint GraphQL server entry point
  */
 export default (
-  { defaultState, resolvers, defaultOptions },
+  { resolvers, defaultOptions },
   entryPoint = process.env.REACT_APP_GRAPHQL_API_FQDN,
 ) => {
   /**
@@ -41,12 +40,6 @@ export default (
     return {
       headers: { ...headers, Authorization: token ? `Bearer ${token}` : '' },
     };
-  });
-
-  const stateLink = withClientState({
-    cache,
-    defaults: defaultState,
-    resolvers,
   });
 
   const websocketLink = new WebSocketLink(
@@ -93,12 +86,9 @@ export default (
         }
       }),
       setAuthorizationLink,
-      stateLink,
       link,
     ]),
-    resolvers: {
-      Mutation: {},
-    },
+    resolvers,
     defaultOptions: merge(
       {
         mutate: {
