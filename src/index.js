@@ -79,7 +79,16 @@ export default (
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors) {
-          // @todo: How do we display errors ?
+          graphQLErrors.forEach(error => {
+            if (error.extensions.code === 'UNAUTHENTICATED') {
+              if (Cookies.get(AUTHENTIFICATION_TOKEN_COOKIE)) {
+                // @todo: update the connection page to add a param for disconnected users
+                window.location.replace(process.env.REACT_APP_EMPLOYEE_INTERFACE_FQDN);
+              } else {
+                window.location.replace(process.env.REACT_APP_EMPLOYEE_INTERFACE_FQDN);
+              }
+            }
+          });
         }
         if (networkError) {
           // @todo: Logout user ?
