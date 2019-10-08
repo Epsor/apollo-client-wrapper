@@ -81,12 +81,7 @@ export default (
         if (graphQLErrors) {
           graphQLErrors.forEach(error => {
             if (error.extensions.code === 'UNAUTHENTICATED') {
-              if (Cookies.get(AUTHENTIFICATION_TOKEN_COOKIE)) {
-                // @todo: update the connection page to add a param for disconnected users
-                window.location.replace(process.env.REACT_APP_EMPLOYEE_INTERFACE_FQDN);
-              } else {
-                window.location.replace(process.env.REACT_APP_EMPLOYEE_INTERFACE_FQDN);
-              }
+              window.location.replace(process.env.REACT_APP_AUTH_INTERFACE_FQDN);
             }
           });
         }
