@@ -23,6 +23,7 @@ export const createUuid = uuidv4;
 export default (
   { resolvers, defaultOptions },
   entryPoint = process.env.REACT_APP_GRAPHQL_API_FQDN,
+  fallbackUrl = '/deconnexion',
 ) => {
   /**
    * Define cache system.
@@ -86,7 +87,7 @@ export default (
         if (graphQLErrors) {
           graphQLErrors.forEach(error => {
             if (error.extensions.code === 'UNAUTHENTICATED') {
-              window.location.replace(process.env.REACT_APP_AUTH_INTERFACE_FQDN);
+              window.location.replace(fallbackUrl);
             }
           });
         }
