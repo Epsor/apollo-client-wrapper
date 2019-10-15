@@ -1,3 +1,5 @@
+/* eslint camelcase: ["error", {allow: ["access_token"]}] */
+
 import uuidv4 from 'uuid/v4';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
@@ -18,7 +20,9 @@ export const createUuid = uuidv4;
 
 /**
  * Initialize Apollo client
+ *
  * @param {string} entryPoint GraphQL server entry point
+ * @returns {object} New ApolloClient
  */
 export default (
   { resolvers, defaultOptions },
