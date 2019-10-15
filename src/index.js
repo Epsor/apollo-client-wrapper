@@ -32,7 +32,14 @@ export default (
       __typename && uuid ? `${__typename}:${uuid}` : null,
   });
 
-  const token = Cookies.get(AUTHENTIFICATION_TOKEN_COOKIE);
+  let token = '';
+  const jwt = Cookies.get(AUTHENTIFICATION_TOKEN_COOKIE);
+  if (jwt) {
+    const payload = jwt.split('.')[1];
+    const { access_token } = JSON.parse(atob(payload)) || {};
+    token = access_token;
+  }
+
   /**
    * Set token from cookies in every header request.
    */
