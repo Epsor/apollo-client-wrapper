@@ -33,11 +33,12 @@ export default (
       __typename && uuid ? `${__typename}:${uuid}` : null,
   });
 
-  const token = Cookies.get(AUTHENTIFICATION_TOKEN_COOKIE);
+  const getToken = () => Cookies.get(AUTHENTIFICATION_TOKEN_COOKIE);
   /**
    * Set token from cookies in every header request.
    */
   const setAuthorizationLink = setContext((_, { headers }) => {
+    const token = getToken();
     return {
       headers: { ...headers, Authorization: token ? `Bearer ${token}` : '' },
     };
@@ -48,11 +49,14 @@ export default (
       `ws${process.env.NODE_ENV === 'development' ? '' : 's'}://${entryPoint}/graphql`,
       {
         reconnect: true,
-        connectionParams: () => ({
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }),
+        connectionParams: () => {
+          const token = getToken();
+          return {
+            headers: {
+              authorization: token ? `Bearer ${token}` : '',
+            },
+          };
+        },
       },
     ),
   );
