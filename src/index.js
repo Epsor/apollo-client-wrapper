@@ -20,11 +20,13 @@ export const createUuid = uuidv4;
  * Initialize Apollo client
  * @param {string} entryPoint GraphQL server entry point
  */
-export default (
-  { resolvers, defaultOptions },
-  entryPoint = process.env.REACT_APP_GRAPHQL_API_FQDN,
+export default ({
+  resolvers,
+  defaultOptions,
+  httpEntryPoint = process.env.REACT_APP_GRAPHQL_API_HTTP_URL,
+  wsEntryPoint = process.env.REACT_APP_GRAPHQL_API_WS_URL,
   fallbackUrl = '/deconnexion',
-) => {
+} = {}) => {
   /**
    * Define cache system.
    */
@@ -45,24 +47,21 @@ export default (
   });
 
   const websocketLink = new WebSocketLink(
-    new SubscriptionClient(
-      `ws${process.env.NODE_ENV === 'development' ? '' : 's'}://${entryPoint}/graphql`,
-      {
-        reconnect: true,
-        connectionParams: () => {
-          const token = getToken();
-          return {
-            headers: {
-              authorization: token ? `Bearer ${token}` : '',
-            },
-          };
-        },
+    new SubscriptionClient(wsEntryPoint, {
+      reconnect: true,
+      connectionParams: () => {
+        const token = getToken();
+        return {
+          headers: {
+            authorization: token ? `Bearer ${token}` : '',
+          },
+        };
       },
-    ),
+    }),
   );
 
   const httpLink = createUploadLink({
-    uri: `http${process.env.NODE_ENV === 'development' ? '' : 's'}://${entryPoint}`,
+    uri: httpEntryPoint,
     credentials: 'include',
     fetch,
   });
