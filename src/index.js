@@ -26,6 +26,7 @@ export default ({
   httpEntryPoint = process.env.REACT_APP_GRAPHQL_API_HTTP_URL,
   wsEntryPoint = process.env.REACT_APP_GRAPHQL_API_WS_URL,
   fallbackUrl = '/deconnexion',
+  authUrl = process.env.REACT_APP_AUTH_INTERFACE_FQDN,
 } = {}) => {
   /**
    * Define cache system.
@@ -90,7 +91,12 @@ export default ({
         if (graphQLErrors) {
           graphQLErrors.forEach(error => {
             if (error.extensions.code === 'UNAUTHENTICATED') {
-              window.location.replace(fallbackUrl);
+              if (getToken()) {
+                Cookies.remove(AUTHENTIFICATION_TOKEN_COOKIE);
+                window.location.replace(fallbackUrl);
+                return;
+              }
+              window.location.assign(authUrl);
             }
           });
         }
