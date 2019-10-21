@@ -1,4 +1,4 @@
-export const AUTHENTIFICATION_TOKEN_COOKIE = `${
+export const AUTHENTICATION_TOKEN_COOKIE = `${
   process.env.REACT_APP_ENVIRONMENT && process.env.REACT_APP_ENVIRONMENT === 'production'
     ? ''
     : `${process.env.REACT_APP_ENVIRONMENT}_`

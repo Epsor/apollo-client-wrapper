@@ -1,6 +1,6 @@
 {
   "name": "@epsor/apollo-client-wrapper",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "author": "Epsor",
   "description": "GraphQL API Client for Epsor",
   "main": "dist/index.js",
@@ -52,17 +52,20 @@
   "devDependencies": {
     "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.1.0",
+    "@types/uuid": "^3.4.5",
+    "@typescript-eslint/eslint-plugin": "^2.4.0",
+    "@typescript-eslint/parser": "^2.4.0",
     "babel-eslint": "^10.0.2",
     "commitizen": "^4.0.3",
     "eslint": "^6.1.0",
-    "eslint-config-airbnb": "^17.1.1",
+    "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.0",
-    "eslint-plugin-react": "^7.14.3",
     "git-cz": "^3.2.1",
     "husky": "^3.0.2",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "typescript": "^3.6.4"
   }
 }

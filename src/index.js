@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 import fetch from 'unfetch';
 import merge from 'lodash/merge';
 
-import { AUTHENTIFICATION_TOKEN_COOKIE } from './types';
+import { AUTHENTICATION_TOKEN_COOKIE } from './types';
 
 export const createUuid = uuidv4;
 
@@ -36,12 +36,13 @@ export default ({
       __typename && uuid ? `${__typename}:${uuid}` : null,
   });
 
-  const getToken = () => Cookies.get(AUTHENTIFICATION_TOKEN_COOKIE);
+  const getToken = () => Cookies.get(AUTHENTICATION_TOKEN_COOKIE);
   /**
    * Set token from cookies in every header request.
    */
   const setAuthorizationLink = setContext((_, { headers }) => {
     const token = getToken();
+
     return {
       headers: { ...headers, Authorization: token ? `Bearer ${token}` : '' },
     };
@@ -52,6 +53,7 @@ export default ({
       reconnect: true,
       connectionParams: () => {
         const token = getToken();
+
         return {
           headers: {
             authorization: token ? `Bearer ${token}` : '',
@@ -71,6 +73,7 @@ export default ({
     // split based on operation type
     ({ query }) => {
       const definition = getMainDefinition(query);
+
       return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
     },
     websocketLink,
@@ -92,7 +95,7 @@ export default ({
           graphQLErrors.forEach(error => {
             if (error.extensions.code === 'UNAUTHENTICATED') {
               if (getToken()) {
-                Cookies.remove(AUTHENTIFICATION_TOKEN_COOKIE);
+                Cookies.remove(AUTHENTICATION_TOKEN_COOKIE);
                 window.location.replace(fallbackUrl);
                 return;
               }
