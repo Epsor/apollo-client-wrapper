@@ -12,8 +12,9 @@ import Cookies from 'js-cookie';
 import fetch from 'unfetch';
 import merge from 'lodash/merge';
 
-import { AUTHENTICATION_TOKEN_COOKIE } from './types';
+import { AUTHENTICATION_TOKEN_COOKIE, COOKIE_DOMAIN } from './types';
 
+export { AUTHENTICATION_TOKEN_COOKIE, COOKIE_DOMAIN };
 export const createUuid = uuidv4;
 
 /**
