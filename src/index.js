@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 import fetch from 'unfetch';
 import merge from 'lodash/merge';
 
-import { AUTHENTICATION_TOKEN_COOKIE } from './types';
+import { AUTHENTICATION_TOKEN_COOKIE, COOKIE_DOMAIN } from './types';
 
 export const createUuid = uuidv4;
 
@@ -95,7 +95,7 @@ export default ({
           graphQLErrors.forEach(error => {
             if (error.extensions.code === 'UNAUTHENTICATED') {
               if (getToken()) {
-                Cookies.remove(AUTHENTICATION_TOKEN_COOKIE);
+                Cookies.remove(AUTHENTICATION_TOKEN_COOKIE, { domain: COOKIE_DOMAIN });
                 window.location.replace(fallbackUrl);
                 return;
               }
