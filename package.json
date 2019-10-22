@@ -9,7 +9,7 @@
     "test": "echo no tests",
     "start": "babel src -d dist --watch --copy-files --verbose",
     "clean": "rm -rf dist",
-    "build": "babel src -d dist --ignore 'src/**/*.test.js'",
+    "build": "babel src -d dist --copy-files --ignore 'src/**/*.test.js'",
     "commit": "git-cz",
     "lint": "eslint src --cache --max-warnings=0 --cache-location .eslintcache"
   },
