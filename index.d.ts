@@ -1,5 +1,9 @@
 import { ApolloClient } from 'apollo-client';
 
+interface Client<TCacheShape> extends ApolloClient<TCacheShape> {
+  resetWSConnection(): void;
+}
+
 declare function initialize(options: {
   defaultState: {
     getErrors: [];
@@ -9,7 +13,7 @@ declare function initialize(options: {
   wsEntryPoint?: string;
   fallbackUrl?: string;
   authUrl?: string;
-}): ApolloClient<{}>;
+}): Client<{}>;
 
 export function createUuid(): string;
 
