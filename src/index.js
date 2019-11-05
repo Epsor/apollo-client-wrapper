@@ -8,6 +8,7 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { createUploadLink } from 'apollo-upload-client';
 import { getMainDefinition } from 'apollo-utilities';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+import MessageTypes from 'subscriptions-transport-ws/dist/message-types';
 import Cookies from 'js-cookie';
 import fetch from 'unfetch';
 import merge from 'lodash/merge';
@@ -48,20 +49,22 @@ export default ({
     };
   });
 
-  const websocketLink = new WebSocketLink(
-    new SubscriptionClient(wsEntryPoint, {
-      reconnect: true,
-      connectionParams: () => {
-        const token = getToken();
+  const wsClient = new SubscriptionClient(wsEntryPoint, {
+    reconnect: true,
+    connectionParams: () => {
+      const token = getToken();
 
-        return {
-          headers: {
-            authorization: token ? `Bearer ${token}` : '',
-          },
-        };
-      },
-    }),
-  );
+      return {
+        headers: {
+          authorization: token ? `Bearer ${token}` : '',
+        },
+      };
+    },
+  });
+
+  wsClient.maxConnectTimeGenerator.duration = () => wsClient.maxConnectTimeGenerator.max;
+
+  const websocketLink = new WebSocketLink(wsClient);
 
   const httpLink = createUploadLink({
     uri: httpEntryPoint,
@@ -88,7 +91,7 @@ export default ({
    *  - Websocket middleware for subscription
    *  - HTTP middleware to define graphql endpoint.
    */
-  return new ApolloClient({
+  const client = new ApolloClient({
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors) {
@@ -128,4 +131,19 @@ export default ({
     cache,
     connectToDevTools: process.env.NODE_ENV === 'development',
   });
+
+  /**
+   * Allows to drop the connection and reconnect to previous subscriptions
+   * Can be useful in the case of an authentication where the connectionParams
+   * of the wsClient have changed, (e.g when the auth token is set)
+   */
+  client.resetWSConnection = () => {
+    wsClient.close();
+    wsClient.connect();
+
+    Object.keys(wsClient.operations).forEach(id => {
+      wsClient.sendMessage(id, MessageTypes.GQL_START, wsClient.operations[id].options);
+    });
+  };
+  return client;
 };
