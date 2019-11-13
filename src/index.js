@@ -23,6 +23,7 @@ export const createUuid = uuidv4;
  */
 export default ({
   resolvers,
+  cookiePrefix,
   defaultOptions,
   httpEntryPoint = process.env.REACT_APP_GRAPHQL_API_HTTP_URL,
   wsEntryPoint = process.env.REACT_APP_GRAPHQL_API_WS_URL,
@@ -37,7 +38,8 @@ export default ({
       __typename && uuid ? `${__typename}:${uuid}` : null,
   });
 
-  const getToken = () => Cookies.get(AUTHENTICATION_TOKEN_COOKIE);
+  const getToken = () =>
+    `${cookiePrefix ? `${cookiePrefix}_` : ''}${Cookies.get(AUTHENTICATION_TOKEN_COOKIE)}`;
   /**
    * Set token from cookies in every header request.
    */
