@@ -9,6 +9,7 @@ declare function initialize(options: {
     getErrors: [];
   };
   resolvers: object;
+  cookiePrefix?: string;
   httpEntryPoint?: string;
   wsEntryPoint?: string;
   fallbackUrl?: string;
