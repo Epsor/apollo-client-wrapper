@@ -13,12 +13,13 @@ import Cookies from 'js-cookie';
 import fetch from 'unfetch';
 import merge from 'lodash/merge';
 
-import { AUTHENTICATION_TOKEN_COOKIE, COOKIE_DOMAIN } from './types';
+import { AUTHENTICATION_TOKEN_COOKIE, COOKIE_DOMAIN, USERCOMPANY_COOKIE } from './types';
 
 export const createUuid = uuidv4;
 
 /**
- * Initialize Apollo client
+ * Initialize Apollo client.
+ *
  * @param {string} entryPoint GraphQL server entry point
  */
 export default ({
@@ -38,16 +39,45 @@ export default ({
       __typename && uuid ? `${__typename}:${uuid}` : null,
   });
 
+  /**
+   * Get the AccessToken from cookies.
+   *
+   * @returns {?string} Get the value of the token cookie
+   */
   const getToken = () =>
     Cookies.get(`${tokenPrefix ? `${tokenPrefix}_` : ''}${AUTHENTICATION_TOKEN_COOKIE}`);
+
+  /**
+   * Get the UserCompanyUuid from cookies.
+   *
+   * @returns {?string} Get the value of the userCompany cookie
+   */
+  const getUserCompanyUuid = () => Cookies.get(USERCOMPANY_COOKIE);
+
+  /**
+   * Get header from cookies.
+   *
+   * @returns {object} Additional header to send to each requests
+   */
+  const getHeaders = () => {
+    const token = getToken();
+    const userCompanyUuid = getUserCompanyUuid();
+
+    return {
+      ...(userCompanyUuid ? { 'x-UserCompany': userCompanyUuid } : {}),
+      Authorization: token ? `Bearer ${token}` : '',
+    };
+  };
+
   /**
    * Set token from cookies in every header request.
    */
   const setAuthorizationLink = setContext((_, { headers }) => {
-    const token = getToken();
-
     return {
-      headers: { ...headers, Authorization: token ? `Bearer ${token}` : '' },
+      headers: {
+        ...headers,
+        ...getHeaders(),
+      },
     };
   });
 
@@ -55,10 +85,13 @@ export default ({
     reconnect: true,
     connectionParams: () => {
       const token = getToken();
+      const userCompanyUuid = getUserCompanyUuid();
 
       return {
         headers: {
+          // BE AWARE - lowercase header name
           authorization: token ? `Bearer ${token}` : '',
+          ...(userCompanyUuid ? { 'x-UserCompany': userCompanyUuid } : {}),
         },
       };
     },
