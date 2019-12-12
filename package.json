@@ -1,6 +1,6 @@
 {
   "name": "@epsor/apollo-client-wrapper",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "author": "Epsor",
   "description": "GraphQL API Client for Epsor",
   "main": "dist/index.js",
