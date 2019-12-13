@@ -10,6 +10,7 @@ declare function initialize(options: {
   };
   resolvers: object;
   tokenPrefix?: string;
+  redirectOnError?: boolean;
   httpEntryPoint?: string;
   wsEntryPoint?: string;
   fallbackUrl?: string;

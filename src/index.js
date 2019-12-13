@@ -26,6 +26,7 @@ export default ({
   resolvers,
   tokenPrefix,
   defaultOptions,
+  redirectOnError = true,
   httpEntryPoint = process.env.REACT_APP_GRAPHQL_API_HTTP_URL,
   wsEntryPoint = process.env.REACT_APP_GRAPHQL_API_WS_URL,
   fallbackUrl = '/deconnexion',
@@ -131,7 +132,7 @@ export default ({
       onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors) {
           graphQLErrors.forEach(error => {
-            if (error.extensions.code === 'UNAUTHENTICATED') {
+            if (redirectOnError && error.extensions.code === 'UNAUTHENTICATED') {
               if (getToken()) {
                 Cookies.remove(AUTHENTICATION_TOKEN_COOKIE, { domain: COOKIE_DOMAIN });
                 window.location.replace(fallbackUrl);
